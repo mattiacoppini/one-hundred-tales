@@ -1,18 +1,22 @@
-<script>
-	export let name;
+<script lang="ts">
+	export let name: string;
 </script>
 
 <main>
 	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	<div>dibadabulba</div>
 </main>
 
-<style>
+<style lang="less">
 	main {
 		text-align: center;
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
+		div {
+			color: red;
+		}
 	}
 
 	h1 {
