@@ -1,11 +1,35 @@
 <script lang="ts">
-	export let name: string;
+	import { onMount } from 'svelte';
+	import { getCardsList } from './application/usecase-get-cards-list';
+	import type ICard from './domains/Card/ICard';
+
+	let cards: ICard[] = [];
+	let loading: boolean = false;
+	onMount(() => {
+		loading = true;
+		getCardsList()
+		.then(cardsResponse => {
+			cards = cardsResponse;
+			loading = false;
+		})
+	})
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-	<div>dibadabulba</div>
+	<div>
+		<h1>Cards number: {cards.length}</h1>
+	</div>
+	<div class='cards'>
+		{#if loading}
+			<div>...loading</div>
+		{:else}
+			{#each cards as card (card.id)}
+				<div>
+					{card.name}
+				</div>
+			{/each}
+		{/if}
+	</div>
 </main>
 
 <style lang="less">
@@ -26,6 +50,13 @@
 		font-weight: 100;
 	}
 
+	div.cards {
+		display: flex;
+		flex-wrap: wrap;
+		div {
+			width:100%;
+		}
+	}
 	@media (min-width: 640px) {
 		main {
 			max-width: none;
