@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { getCardsListUseCase, readOwnedCardsUseCase, toggleCardOwnershipUseCase } from './application/card-use-cases';
-	import type ICard from './domains/Card/Card';
+	import type Card from './domains/Card/Card';
 	import Table from './ui/atoms/Table.svelte';
 
-	let cards: ICard[] = [];
+	let cards: Card[] = [];
 	let loading: boolean = false;
 
 	onMount(() => {
 		loading = true;
 		getCardsListUseCase()
-		.then(cardsResponse => {
+		.then((cardsResponse: Card[]) => {
 			cards = cardsResponse;
 			loading = false;
 		})
