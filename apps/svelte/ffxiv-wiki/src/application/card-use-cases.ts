@@ -1,21 +1,18 @@
-import type ICard from '../domains/Card/ICard';
+import type Card from '../domains/Card/Card';
 import { CardRepository } from '../infra/Card/CardRepository';
+import { CardService } from '../domains/Card/CardService';
 
-export const getCardsListUseCase = async (): Promise<ICard[]> => {
-  const cardRepository = new CardRepository();
+export const getCardsListUseCase = async (): Promise<Card[]> => {
+  const cardRepository = new CardService([], new CardRepository());
   return await cardRepository.getCardsList();
 }
 
-export const setCardAsOwnedUseCase = (cards: ICard[], ownedId: number): ICard[] => {
-  return [...cards.map( card => {
-    if (card.id === ownedId){
-      card.owned = !card.owned
-    };
-
-    return card
-  })];
+export const toggleCardOwnershipUseCase = (cards: Card[], ownedId: number): Card[] => {
+  const cardService = new CardService(cards, new CardRepository());
+  return cardService.toggleCardOwnership(ownedId);
 }
 
-export const getOwnedCardsUseCase = (cards: ICard[]): ICard[] => {
-  return cards.filter(card => card.owned);
+export const readOwnedCardsUseCase = (cards: Card[]): Card[] => {
+  const cardService = new CardService(cards, new CardRepository());
+  return cardService.readOwnedCards();
 }

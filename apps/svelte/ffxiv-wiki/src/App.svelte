@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getCardsListUseCase, getOwnedCardsUseCase, setCardAsOwnedUseCase } from './application/card-use-cases';
-	import type ICard from './domains/Card/ICard';
+	import { getCardsListUseCase, readOwnedCardsUseCase, toggleCardOwnershipUseCase } from './application/card-use-cases';
+	import type ICard from './domains/Card/Card';
 	import Table from './ui/atoms/Table.svelte';
 
 	let cards: ICard[] = [];
@@ -17,13 +17,13 @@
 	})
 
 	const toggleOwnedCheckbox = (id) => (e) => {
-		cards = setCardAsOwnedUseCase(cards, id);
-		setTimeout(() => e.target.checked = true, 0)
-		
+		cards = toggleCardOwnershipUseCase(cards, id);
+		const checked = e.target.checked
+		setTimeout(() => e.target.checked = checked, 0)
 	}
 
 	function saveOwnedCards(){
-		console.log(getOwnedCardsUseCase(cards));
+		console.log(readOwnedCardsUseCase(cards));
 	}
 </script>
 
