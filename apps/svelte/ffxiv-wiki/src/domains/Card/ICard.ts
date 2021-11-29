@@ -3,8 +3,9 @@ export interface ICard {
   name: string;
   stars: number;
   description: string;
-  icon: string;
+  iconUrl: string;
   image: string;
+  owned: boolean;
 }
 
 export default ICard;

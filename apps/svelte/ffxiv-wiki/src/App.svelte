@@ -1,33 +1,65 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getCardsList } from './application/usecase-get-cards-list';
+	import { getCardsListUseCase, getOwnedCardsUseCase, setCardAsOwnedUseCase } from './application/card-use-cases';
 	import type ICard from './domains/Card/ICard';
+	import Table from './ui/atoms/Table.svelte';
 
 	let cards: ICard[] = [];
 	let loading: boolean = false;
+
 	onMount(() => {
 		loading = true;
-		getCardsList()
+		getCardsListUseCase()
 		.then(cardsResponse => {
 			cards = cardsResponse;
 			loading = false;
 		})
 	})
+
+	const toggleOwnedCheckbox = (id) => (e) => {
+		cards = setCardAsOwnedUseCase(cards, id);
+		setTimeout(() => e.target.checked = true, 0)
+		
+	}
+
+	function saveOwnedCards(){
+		console.log(getOwnedCardsUseCase(cards));
+	}
 </script>
 
 <main>
 	<div>
 		<h1>Cards number: {cards.length}</h1>
 	</div>
+	<div>
+		<button on:click={saveOwnedCards}>save owned cards</button>
+	</div>
 	<div class='cards'>
 		{#if loading}
 			<div>...loading</div>
 		{:else}
-			{#each cards as card (card.id)}
-				<div>
-					{card.name}
-				</div>
-			{/each}
+			<Table fullWidth>
+				<thead>
+					<tr>
+						<th>Nr</th>
+						<th></th>
+						<th>Name</th>
+						<th>owned</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each cards as card (card.id)}
+						<tr>
+							<td>{card.id}</td>
+							<td>
+								<img src={card.iconUrl} alt={card.name} />
+							</td>
+							<td>{card.name}</td>
+							<td><input type=checkbox on:click|preventDefault={toggleOwnedCheckbox(card.id)} /></td>
+						</tr>
+					{/each}
+				</tbody>
+			</Table>
 		{/if}
 	</div>
 </main>
